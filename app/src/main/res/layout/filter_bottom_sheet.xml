@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?attr/colorSurface">
+
+    <!-- Título y Botón de Cerrar/Limpiar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Filtros"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnClearFilters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Limpiar"
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- ORDENAR POR -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ordenar por"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/sortRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/sortNewest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Novedades"
+            android:layout_marginEnd="16dp"/>
+
+        <RadioButton
+            android:id="@+id/sortPriceAsc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ascendente"
+            android:layout_marginEnd="16dp"/>
+
+        <RadioButton
+            android:id="@+id/sortPriceDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descendente" />
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- RANGO DE PRECIO -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rango de Precio"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/priceRangeStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 €" />
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/priceRangeSlider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:valueFrom="0.0"
+            android:valueTo="1000.0"
+            android:stepSize="5.0" />
+
+        <TextView
+            android:id="@+id/priceRangeEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1000 €" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- CATEGORÍAS (CHIP GROUP) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Categorías"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/categoryChipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="false"> 
+        <!-- Se rellenará dinámicamente -->
+    </com.google.android.material.chip.ChipGroup>
+
+    <Button
+        android:id="@+id/btnApplyFilters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Aplicar Filtros"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="?attr/colorPrimary"/>
+
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1976D2</color>
+    <color name="colorPrimaryVariant">#004BA0</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#FFC107</color>
+    <color name="colorSecondaryVariant">#C79100</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorAccent">#448AFF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="status_available">#4CAF50</color>
+    <color name="status_unavailable">#F44336</color>
+    <color name="light_gray">#F0F0F0</color> <!-- NUEVO -->
+</resources>

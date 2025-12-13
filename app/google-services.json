@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "920385947392",
+    "project_id": "footsale",
+    "storage_bucket": "footsale.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920385947392:android:ad2d39fdb2a3d923b215e5",
+        "android_client_info": {
+          "package_name": "com.example.footsale"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVln7OWrCI9dGfc5D7RnC_CyP0w8FObLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

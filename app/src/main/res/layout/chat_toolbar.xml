@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chat_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    app:contentInsetStart="0dp"> 
+
+    <LinearLayout
+        android:id="@+id/toolbar_content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="16dp"
+        android:background="?attr/selectableItemBackground">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/toolbar_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_person"/>
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Usuario"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.Toolbar>

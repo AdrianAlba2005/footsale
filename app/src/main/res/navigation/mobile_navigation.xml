@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_store">
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.footsale.fragment.ProfileFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_profile" />
+
+    <!-- Updated to point to TiendaFragment -->
+    <fragment
+        android:id="@+id/navigation_store"
+        android:name="com.example.footsale.fragment.TiendaFragment"
+        android:label="Tienda"
+        tools:layout="@layout/fragment_tienda" />
+
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.example.footsale.fragment.MessagesFragment"
+        android:label="Mensajes"
+        tools:layout="@layout/fragment_messages" />
+
+</navigation>

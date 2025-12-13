@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/cardIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_card" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/cardType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Visa"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cardNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="**** **** **** 1234" />
+        </LinearLayout>
+
+        <!-- Podríamos añadir un botón para eliminar la tarjeta aquí en el futuro -->
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

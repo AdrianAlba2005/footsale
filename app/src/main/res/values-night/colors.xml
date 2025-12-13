@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta Material 3 - MODO OSCURO -->
+    <color name="md_theme_primary">#4FC3F7</color> <!-- Azul Celeste Vibrante -->
+    <color name="md_theme_onPrimary">#000000</color>
+    <color name="md_theme_primaryContainer">#0D47A1</color>
+    <color name="md_theme_onPrimaryContainer">#FFFFFF</color>
+    
+    <color name="md_theme_secondary">#81D4FA</color>
+    <color name="md_theme_onSecondary">#000000</color>
+    <color name="md_theme_secondaryContainer">#00497B</color>
+    <color name="md_theme_onSecondaryContainer">#FFFFFF</color>
+    
+    <color name="md_theme_error">#CF6679</color>
+    <color name="md_theme_onError">#000000</color>
+    
+    <!-- FONDO NEGRO PURO -->
+    <color name="md_theme_background">#000000</color>
+    <color name="md_theme_onBackground">#FFFFFF</color>
+    
+    <!-- SUPERFICIES (Azul muy oscuro para tarjetas y cabeceras) -->
+    <color name="md_theme_surface">#0D1F33</color>
+    <color name="md_theme_onSurface">#FFFFFF</color>
+
+    <!-- Colores Específicos y Compatibilidad -->
+    <color name="glass_card_background">#1AFFFFFF</color> <!-- Cristal sutil -->
+    
+    <color name="dialog_background_transparent">#E6121212</color>
+    <color name="card_background_transparent">#B31E1E1E</color>
+    <color name="primaryDark">#000000</color>
+    <color name="textColorSecondary">#B0BEC5</color>
+    <color name="error">#CF6679</color>
+    <color name="status_available">#81C784</color>
+    <color name="status_unavailable">#E57373</color>
+</resources>

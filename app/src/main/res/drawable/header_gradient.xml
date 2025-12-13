@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Un degradado muy suave en tonos azul cielo/grisáceo claro -->
+    <gradient
+        android:startColor="#E3F2FD" 
+        android:endColor="#F5F9FF"
+        android:angle="270" />
+    <corners
+        android:bottomLeftRadius="40dp"
+        android:bottomRightRadius="40dp" />
+</shape>

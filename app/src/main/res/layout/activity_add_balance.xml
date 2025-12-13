@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:background="@color/dialog_background_transparent"
+    tools:context=".AddBalanceActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecciona la cantidad a añadir" 
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:textColor="?android:attr/textColorPrimary"/>
+
+    <TextView
+        android:id="@+id/textViewSelectedAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textAppearance="?attr/textAppearanceDisplayMedium"
+        android:textColor="?attr/colorPrimary"
+        tools:text="50.00 €"/>
+
+    <SeekBar
+        android:id="@+id/seekBarAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:max="100" />
+
+    <Button
+        android:id="@+id/buttonConfirmAddBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Confirmar Ingreso"/>
+
+</LinearLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivUserAvatar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_person" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="Nombre Usuario"/>
+
+        <TextView
+            android:id="@+id/tvLastMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="Tú: Hola, ¿sigue disponible?"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:textSize="12sp"
+        android:textColor="?android:attr/textColorSecondary" 
+        tools:text="10:30"/>
+
+</LinearLayout>

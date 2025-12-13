@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="?attr/selectableItemBackground">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_image"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_person" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/user_image"
+        android:layout_toStartOf="@id/layout_right_column"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Nombre Usuario"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+        <TextView
+            android:id="@+id/last_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Este es el último mensaje de la convers..."
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceBody2" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_right_column"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="10:45"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/unread_count"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/unread_count_background"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="3"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+</RelativeLayout>
