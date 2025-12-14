@@ -30,6 +30,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    lint {
+        // Desactiva la comprobación de opciones obsoletas en lint
+        disable += "ObsoleteLintCustomCheck" 
+        // O ignora específicamente estos warnings si vienen del compilador de Java
+        // (Aunque para warnings de compilación como source/target, la configuración
+        // está arriba en compileOptions, y están correctas para Java 8)
+    }
 }
 
 dependencies {

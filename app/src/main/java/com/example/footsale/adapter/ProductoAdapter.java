@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.footsale.ProductDetailActivity;
 import com.example.footsale.R;
+import com.example.footsale.api.ApiClient;
 import com.example.footsale.entidades.Producto;
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +47,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.tvPrecio.setText(String.format(Locale.GERMAN, "%.2f €", producto.getPrecio()));
 
         if (producto.getImagenPrincipal() != null && !producto.getImagenPrincipal().isEmpty()) {
-            Glide.with(context).load(producto.getImagenPrincipal()).placeholder(R.drawable.ic_image_placeholder).into(holder.ivProducto);
+            Glide.with(context).load(ApiClient.getFullImageUrl(producto.getImagenPrincipal())).placeholder(R.drawable.ic_image_placeholder).into(holder.ivProducto);
         } else {
             holder.ivProducto.setImageResource(R.drawable.ic_image_placeholder);
         }

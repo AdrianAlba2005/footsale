@@ -92,7 +92,8 @@ public class RegisterFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Registro exitoso, por favor verifica tu email.", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getActivity(), VerificationActivity.class);
-                    intent.putExtra("EMAIL", email); // Pasar email a la siguiente actividad
+                    // CAMBIO: Asegurar que el nombre del extra coincida con el que espera VerificationActivity ("email")
+                    intent.putExtra("email", email); 
                     startActivity(intent);
                 } else {
                     // Lógica para manejar errores como email duplicado, etc.

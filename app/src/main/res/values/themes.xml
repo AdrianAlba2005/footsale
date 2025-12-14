@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.FootSale" parent="Theme.Material3.Dark">
+    <style name="Theme.FootSale" parent="Theme.Material3.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
@@ -12,6 +12,10 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar">true</item>
+        
+        <!-- ESTILO PARA EL MENÚ POPUP -->
+        <item name="popupMenuStyle">@style/Widget.FootSale.PopupMenu</item>
     </style>
 
     <style name="Theme.FootSale.NoActionBar" parent="Theme.FootSale">
@@ -25,9 +29,25 @@
         <item name="postSplashScreenTheme">@style/Theme.FootSale</item>
     </style>
 
-    <!-- NUEVO TEMA PARA ABOUT ACTIVITY -->
+    <!-- TEMA PARA ABOUT ACTIVITY -->
     <style name="Theme.FootSale.About" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Aquí puedes añadir personalizaciones si lo necesitas -->
+        <!-- Puedes añadir personalizaciones aquí si es necesario -->
+    </style>
+
+    <!-- ESTILOS RESTAURADOS PARA CORREGIR EL ERROR -->
+    <style name="Theme.FootSale.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyTabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabTextColor">?attr/colorOnPrimary</item>
+        <item name="tabSelectedTextColor">?attr/colorOnPrimary</item>
+        <item name="tabIndicatorColor">?attr/colorOnPrimary</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <!-- ESTILO PERSONALIZADO PARA EL MENÚ DESPLEGABLE (3 PUNTITOS) -->
+    <style name="Widget.FootSale.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:textColor">@color/black</item> <!-- Texto negro en modo claro -->
+        <item name="android:itemBackground">@color/white</item> <!-- Fondo blanco en modo claro -->
     </style>
 
 </resources>

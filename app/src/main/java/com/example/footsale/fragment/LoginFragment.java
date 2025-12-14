@@ -102,13 +102,21 @@ public class LoginFragment extends Fragment {
                         String errorBody = response.errorBody().string();
                         JsonObject errorObject = new Gson().fromJson(errorBody, JsonObject.class);
                         
+                        // Verificar si está baneado
+                        if (errorObject.has("banned") && errorObject.get("banned").getAsBoolean()) {
+                             Toast.makeText(getContext(), "¡CUENTA BANEADA! Contacte con soporte.", Toast.LENGTH_LONG).show();
+                             return;
+                        }
+
                         if (errorObject.has("unverified") && errorObject.get("unverified").getAsBoolean()) {
                             Toast.makeText(getContext(), "Cuenta no verificada. Por favor, introduce el código.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getActivity(), VerificationActivity.class);
                             intent.putExtra("EMAIL", email);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(getContext(), "Credenciales inválidas", Toast.LENGTH_SHORT).show();
+                            // Mostrar mensaje de error general (puede ser credenciales o baneado genérico si no se envió flag)
+                            String msg = errorObject.has("error") ? errorObject.get("error").getAsString() : "Credenciales inválidas";
+                            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         Toast.makeText(getContext(), "Error desconocido", Toast.LENGTH_SHORT).show();

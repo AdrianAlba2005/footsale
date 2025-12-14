@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +29,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -38,10 +42,11 @@ import retrofit2.Response;
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    // CORREGIDO: Nombres de variables para que coincidan con la intención
-    private EditText nameEditText, phoneEditText, addressEditText, cityEditText;
+
+    private EditText nameEditText, phoneEditText, addressEditText;
+    private AutoCompleteTextView cityEditText;
     private ImageView profileImageView;
-    private TextView changePhotoText; // Para el texto "Cambiar foto"
+    private TextView changePhotoText;
     private CountryCodePicker nationalityPicker, phoneCodePicker;
     private Button saveButton;
     private Uri imageUri;
@@ -53,6 +58,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         initToolbar();
         initViews();
+        setupCityDropdown();
 
         profileImageView.setOnClickListener(v -> openImageChooser());
         changePhotoText.setOnClickListener(v -> openImageChooser());
@@ -71,7 +77,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        // CORREGIDO: Usar los IDs correctos del layout XML
         nameEditText = findViewById(R.id.editTextName);
         phoneEditText = findViewById(R.id.editTextPhone);
         addressEditText = findViewById(R.id.editTextAddress);
@@ -81,6 +86,21 @@ public class EditProfileActivity extends AppCompatActivity {
         nationalityPicker = findViewById(R.id.nationalityPicker);
         phoneCodePicker = findViewById(R.id.phoneCodePicker);
         saveButton = findViewById(R.id.btnSaveChanges);
+
+        // Vincular el picker de prefijo telefónico con el campo de texto
+        phoneCodePicker.registerCarrierNumberEditText(phoneEditText);
+    }
+
+    private void setupCityDropdown() {
+        String[] cities = new String[]{"Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza", "Málaga", "Murcia", "Palma", "Las Palmas", "Bilbao", "Alicante", "Córdoba", "Valladolid", "Vigo", "Gijón", "Capital"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cities);
+        cityEditText.setAdapter(adapter);
+        cityEditText.setEnabled(true); 
+        
+        cityEditText.setOnClickListener(v -> cityEditText.showDropDown());
+        cityEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) cityEditText.showDropDown();
+        });
     }
 
     private void openImageChooser() {
@@ -103,10 +123,40 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Usuario user = response.body();
-                    nameEditText.setText(user.getNombre());
-                    // Aquí iría la lógica para rellenar los otros campos
+                    
+                    if (user.getNombre() != null) nameEditText.setText(user.getNombre());
+                    if (user.getTelefono() != null) {
+                        phoneCodePicker.setFullNumber(user.getTelefono()); 
+                    }
+                    if (user.getCalle() != null) addressEditText.setText(user.getCalle());
+                    if (user.getCiudad() != null) cityEditText.setText(user.getCiudad(), false);
+
+                    // Solución para la Nacionalidad
+                    if (user.getNacionalidad() != null && !user.getNacionalidad().isEmpty()) {
+                        String storedCountry = user.getNacionalidad(); // Ej: "España"
+                        
+                        // Intentamos encontrar el código ISO iterando por todos los países disponibles en Locale
+                        String isoCodeFound = null;
+                        for (String iso : Locale.getISOCountries()) {
+                            Locale l = new Locale("", iso);
+                            // Comprobamos el nombre en español (o el idioma del dispositivo) y en inglés
+                            if (l.getDisplayCountry().equalsIgnoreCase(storedCountry) || 
+                                l.getDisplayCountry(Locale.ENGLISH).equalsIgnoreCase(storedCountry) ||
+                                l.getDisplayCountry(new Locale("es")).equalsIgnoreCase(storedCountry)) {
+                                isoCodeFound = iso;
+                                break;
+                            }
+                        }
+
+                        if (isoCodeFound != null) {
+                            nationalityPicker.setCountryForNameCode(isoCodeFound);
+                        }
+                    }
+
                     if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
-                        Glide.with(EditProfileActivity.this).load(user.getFotoPerfil()).into(profileImageView);
+                        Glide.with(EditProfileActivity.this)
+                            .load(ApiClient.getFullImageUrl(user.getFotoPerfil()))
+                            .into(profileImageView);
                     }
                 }
             }
@@ -118,39 +168,64 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateProfile() {
         String name = nameEditText.getText().toString();
-        // El email no se puede editar, así que se omite del envío
+        String phone = phoneCodePicker.getFullNumberWithPlus(); 
+        String address = addressEditText.getText().toString();
+        String city = cityEditText.getText().toString();
+        // Guardamos el nombre del país seleccionado (Ej: España)
+        String nationality = nationalityPicker.getSelectedCountryName(); 
 
         UsuarioApiService apiService = ApiClient.createUsuarioApiService(this);
         Call<Void> call;
 
         if (imageUri != null) {
-            // Lógica para subir imagen con otros campos (requiere backend multipart)
-            Toast.makeText(this, "La subida de imagen aún no está implementada en el servidor.", Toast.LENGTH_SHORT).show();
+            try {
+                File file = new File(getCacheDir(), "temp_image");
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                OutputStream outputStream = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+                outputStream.close();
+                inputStream.close();
+
+                RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(imageUri)), file);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("profile_photo", file.getName(), requestFile);
+
+                Map<String, RequestBody> fields = new HashMap<>();
+                fields.put("nombre", RequestBody.create(MediaType.parse("text/plain"), name));
+                fields.put("telefono", RequestBody.create(MediaType.parse("text/plain"), phone));
+                fields.put("calle", RequestBody.create(MediaType.parse("text/plain"), address));
+                fields.put("ciudad", RequestBody.create(MediaType.parse("text/plain"), city));
+                fields.put("nacionalidad", RequestBody.create(MediaType.parse("text/plain"), nationality));
+
+                call = apiService.updateProfile(fields, body);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
         } else {
-            // Lógica para actualizar solo texto
-            Map<String, RequestBody> fields = new HashMap<>();
-            fields.put("nombre", RequestBody.create(MediaType.parse("text/plain"), name));
-            // Aquí se añadirían los otros campos de texto a actualizar
-
-            // Esto debería llamar a un endpoint que no requiera imagen
-            // De momento lo dejamos apuntando a updateProfile, pero el backend debería manejarlo
-            call = apiService.updateProfile(fields, null);
-            call.enqueue(new Callback<Void>() {
-                 @Override
-                 public void onResponse(Call<Void> call, Response<Void> response) {
-                     if (response.isSuccessful()) {
-                         Toast.makeText(EditProfileActivity.this, "Perfil actualizado", Toast.LENGTH_SHORT).show();
-                         finish();
-                     } else {
-                         Toast.makeText(EditProfileActivity.this, "Error al actualizar el perfil", Toast.LENGTH_SHORT).show();
-                     }
-                 }
-
-                 @Override
-                 public void onFailure(Call<Void> call, Throwable t) {
-                     Toast.makeText(EditProfileActivity.this, "Error de red", Toast.LENGTH_SHORT).show();
-                 }
-            });
+            UpdateProfileRequest request = new UpdateProfileRequest(name, nationality, phone, address, city);
+            call = apiService.updateProfileTextOnly(request);
         }
+
+        call.enqueue(new Callback<Void>() {
+             @Override
+             public void onResponse(Call<Void> call, Response<Void> response) {
+                 if (response.isSuccessful()) {
+                     Toast.makeText(EditProfileActivity.this, "Perfil actualizado", Toast.LENGTH_SHORT).show();
+                     finish();
+                 } else {
+                     Toast.makeText(EditProfileActivity.this, "Error al actualizar", Toast.LENGTH_SHORT).show();
+                 }
+             }
+
+             @Override
+             public void onFailure(Call<Void> call, Throwable t) {
+                 Toast.makeText(EditProfileActivity.this, "Error de red", Toast.LENGTH_SHORT).show();
+             }
+        });
     }
 }

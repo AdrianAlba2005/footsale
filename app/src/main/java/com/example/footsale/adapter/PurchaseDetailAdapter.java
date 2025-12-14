@@ -10,14 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.footsale.R;
+import com.example.footsale.api.ApiClient;
 import com.example.footsale.entidades.DetallePedido;
 import java.util.List;
 import java.util.Locale;
 
-public class PurchaseDetailAdapter extends RecyclerView.Adapter<PurchaseDetailAdapter.ViewHolder> {
+public class PurchaseDetailAdapter extends RecyclerView.Adapter<PurchaseDetailAdapter.DetailViewHolder> {
 
-    private Context context;
     private List<DetallePedido> detalles;
+    private Context context;
 
     public PurchaseDetailAdapter(Context context, List<DetallePedido> detalles) {
         this.context = context;
@@ -26,39 +27,36 @@ public class PurchaseDetailAdapter extends RecyclerView.Adapter<PurchaseDetailAd
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_purchase_detail_product, parent, false);
-        return new ViewHolder(view);
+        return new DetailViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DetailViewHolder holder, int position) {
         DetallePedido detalle = detalles.get(position);
-        
+
         holder.productName.setText(detalle.getTitulo());
-        holder.productQuantity.setText("Cant: " + detalle.getCantidad());
+        holder.productQuantity.setText("Cantidad: " + detalle.getCantidad());
         holder.productPrice.setText(String.format(Locale.GERMAN, "%.2f €", detalle.getPrecioUnitario()));
 
-        if (detalle.getImagen() != null && !detalle.getImagen().isEmpty()) {
-            Glide.with(context)
-                .load(detalle.getImagen())
+        // Cargar imagen con Glide
+        Glide.with(context)
+                .load(ApiClient.getFullImageUrl(detalle.getImagen())) 
                 .placeholder(R.drawable.ic_image_placeholder)
                 .into(holder.productImage);
-        } else {
-            holder.productImage.setImageResource(R.drawable.ic_image_placeholder);
-        }
     }
 
     @Override
     public int getItemCount() {
-        return detalles != null ? detalles.size() : 0;
+        return detalles.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class DetailViewHolder extends RecyclerView.ViewHolder {
         ImageView productImage;
         TextView productName, productQuantity, productPrice;
 
-        public ViewHolder(@NonNull View itemView) {
+        public DetailViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
             productName = itemView.findViewById(R.id.productName);

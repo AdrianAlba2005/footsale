@@ -144,7 +144,7 @@ public class ProfileFragment extends Fragment {
                     }
 
                     if (currentUser.getFotoPerfil() != null && !currentUser.getFotoPerfil().isEmpty()) {
-                        Glide.with(ProfileFragment.this).load(currentUser.getFotoPerfil()).placeholder(R.drawable.ic_person).into(profileAvatar);
+                        Glide.with(ProfileFragment.this).load(ApiClient.getFullImageUrl(currentUser.getFotoPerfil())).placeholder(R.drawable.ic_person).into(profileAvatar);
                     } else {
                         profileAvatar.setImageResource(R.drawable.ic_person);
                     }

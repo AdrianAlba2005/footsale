@@ -97,7 +97,10 @@ public class UserProfileActivity extends AppCompatActivity {
                     Usuario user = response.body();
                     profileName.setText(user.getNombre());
                     if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
-                        Glide.with(UserProfileActivity.this).load(user.getFotoPerfil()).into(profileAvatar);
+                        Glide.with(UserProfileActivity.this)
+                            .load(ApiClient.getFullImageUrl(user.getFotoPerfil()))
+                            .placeholder(R.drawable.ic_person)
+                            .into(profileAvatar);
                     }
                     // Aquí se debería calcular y mostrar el rating promedio
                 }

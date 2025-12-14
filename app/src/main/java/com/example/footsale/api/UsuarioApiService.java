@@ -13,6 +13,7 @@ import com.example.footsale.api.models.UpdateProfileRequest;
 import com.example.footsale.api.models.VerifyCodeRequest;
 import com.example.footsale.api.models.WithdrawRequest;
 import com.example.footsale.entidades.Card;
+import com.example.footsale.entidades.Pedido;
 import com.example.footsale.entidades.Usuario;
 
 import java.util.List;
@@ -54,8 +55,8 @@ public interface UsuarioApiService {
     @POST("usuario.php?action=request_password_reset")
     Call<Void> requestPasswordReset(@Body EmailRequest request);
 
-    // --- MÉTODO RESTAURADO ---
-    @POST("usuario.php?action=verify_code")
+    // --- CORREGIDO: verify_code -> verify_email para coincidir con el backend ---
+    @POST("usuario.php?action=verify_email")
     Call<Void> verifyCode(@Body VerifyCodeRequest request);
 
     @POST("usuario.php?action=reset_password")
@@ -81,4 +82,7 @@ public interface UsuarioApiService {
 
     @POST("usuario.php?action=ban_user")
     Call<Void> banUser(@Body BanUserRequest request);
+
+    @GET("usuario.php?action=get_all_orders")
+    Call<List<Pedido>> getAllOrders();
 }

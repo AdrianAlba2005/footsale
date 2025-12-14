@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.footsale.R;
+import com.example.footsale.api.ApiClient;
 import com.example.footsale.entidades.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 import java.util.List;
@@ -50,7 +51,10 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
         holder.userRole.setText(rol.substring(0, 1).toUpperCase() + rol.substring(1));
 
         if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
-            Glide.with(context).load(user.getFotoPerfil()).placeholder(R.drawable.ic_person).into(holder.userImage);
+            Glide.with(context)
+                .load(ApiClient.getFullImageUrl(user.getFotoPerfil()))
+                .placeholder(R.drawable.ic_person)
+                .into(holder.userImage);
         } else {
             holder.userImage.setImageResource(R.drawable.ic_person);
         }

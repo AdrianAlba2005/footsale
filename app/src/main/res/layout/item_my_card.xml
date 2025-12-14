@@ -38,9 +38,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="**** **** **** 1234" />
+                
+            <!-- Nuevo TextView para el saldo -->
+            <TextView
+                android:id="@+id/cardBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00 €"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
-
-        <!-- Podríamos añadir un botón para eliminar la tarjeta aquí en el futuro -->
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

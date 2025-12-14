@@ -95,7 +95,8 @@
         <activity
             android:name=".AddCardActivity"
             android:exported="false"
-            android:label="Añadir Tarjeta"/>
+            android:label="Añadir Tarjeta"
+            android:theme="@style/Theme.FootSale.NoActionBar"/>
 
         <activity
             android:name=".CheckoutActivity"
@@ -132,6 +133,10 @@
 
         <activity 
             android:name=".UserProfileActivity" 
+            android:exported="false"
+            android:theme="@style/Theme.FootSale.NoActionBar" />
+        <activity
+                android:name=".AllSalesActivity"
             android:exported="false"
             android:theme="@style/Theme.FootSale.NoActionBar" />
 

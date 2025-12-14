@@ -27,21 +27,27 @@ public class VerificationActivity extends AppCompatActivity {
         verifyButton = findViewById(R.id.verifyButton);
 
         verifyButton.setOnClickListener(v -> {
-            String code = codeEditText.getText().toString();
+            String code = codeEditText.getText().toString().trim(); // Se añadió .trim() para evitar espacios
+            if (code.isEmpty()) {
+                Toast.makeText(this, "Por favor, introduce el código", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
             ApiClient.createUsuarioApiService(this).verifyCode(new VerifyCodeRequest(email, code)).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(VerificationActivity.this, "Cuenta verificada", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(VerificationActivity.this, "Cuenta verificada con éxito", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
-                        Toast.makeText(VerificationActivity.this, "Error al verificar", Toast.LENGTH_SHORT).show();
+                        // Intentar leer el mensaje de error del servidor si es posible, o mostrar genérico
+                        Toast.makeText(VerificationActivity.this, "Código incorrecto o error en la verificación", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(VerificationActivity.this, "Error de red", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VerificationActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });

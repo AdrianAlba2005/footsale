@@ -1,38 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- Base application theme. -->
     <style name="Theme.FootSale" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowActivityTransitions">true</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryContainer">@color/colorPrimary</item>
+        <item name="colorOnPrimaryContainer">@color/black</item>
 
-        <!-- Colores usando nombres comunes (resolverán a valores oscuros aquí) -->
-        <item name="colorPrimary">@color/md_theme_primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
-        <!-- Colores secundarios -->
-        <item name="colorSecondary">@color/md_theme_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
-        <!-- Color de error -->
-        <item name="colorError">@color/md_theme_error</item>
-        <item name="colorOnError">@color/md_theme_onError</item>
-        <!-- Otros colores -->
-        <item name="android:colorBackground">@color/md_theme_background</item>
-        <item name="colorOnBackground">@color/md_theme_onBackground</item>
-        <item name="colorSurface">@color/md_theme_surface</item>
-        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondaryContainer">@color/colorSecondary</item>
+        <item name="colorOnSecondaryContainer">@color/black</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@android:color/black</item>
+        <item name="colorSurface">@android:color/black</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        
+        <!-- TabLayout colors -->
+        <item name="tabStyle">@style/Widget.Material3.TabLayout</item>
+        <item name="tabTextColor">#B3FFFFFF</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/colorSecondary</item>
+        
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- ESTILO PARA EL MENÚ POPUP EN MODO OSCURO -->
+        <item name="popupMenuStyle">@style/Widget.FootSale.PopupMenu</item>
     </style>
 
-    <!-- Estilos Restaurados -->
-    <style name="Theme.FootSale.NoActionBar" parent="Theme.FootSale" />
-    <style name="Theme.FootSale.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
-    <style name="MyTabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="tabTextColor">?attr/colorOnPrimary</item>
-        <item name="tabSelectedTextColor">?attr/colorOnPrimary</item>
-        <item name="tabIndicatorColor">?attr/colorOnPrimary</item>
-        <item name="android:background">?attr/colorPrimary</item>
+    <style name="Theme.FootSale.NoActionBar" parent="Theme.FootSale">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    
+    <style name="Theme.FootSale.About" parent="Theme.FootSale">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
+    <style name="Theme.FootSale.AppStarting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_logo_round</item>
+        <item name="postSplashScreenTheme">@style/Theme.FootSale</item>
+    </style>
+    
+    <!-- ESTILO PERSONALIZADO PARA EL MENÚ DESPLEGABLE (3 PUNTITOS) EN MODO OSCURO -->
+    <style name="Widget.FootSale.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:textColor">@color/white</item> <!-- Texto blanco en modo oscuro -->
+        <item name="android:itemBackground">@android:color/black</item> <!-- Fondo negro en modo oscuro -->
+        <item name="android:colorBackground">@android:color/black</item>
     </style>
 
 </resources>

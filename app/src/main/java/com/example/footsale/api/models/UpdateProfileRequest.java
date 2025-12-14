@@ -6,11 +6,23 @@ public class UpdateProfileRequest {
     @SerializedName("nombre")
     private final String nombre;
 
-    @SerializedName("email")
-    private final String email;
+    @SerializedName("nacionalidad")
+    private final String nacionalidad;
 
-    public UpdateProfileRequest(String nombre, String email) {
+    @SerializedName("telefono")
+    private final String telefono;
+
+    @SerializedName("calle")
+    private final String calle;
+
+    @SerializedName("ciudad")
+    private final String ciudad;
+
+    public UpdateProfileRequest(String nombre, String nacionalidad, String telefono, String calle, String ciudad) {
         this.nombre = nombre;
-        this.email = email;
+        this.nacionalidad = nacionalidad;
+        this.telefono = telefono;
+        this.calle = calle;
+        this.ciudad = ciudad;
     }
 }

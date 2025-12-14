@@ -7,19 +7,14 @@
     android:orientation="vertical"
     tools:context=".AddCardActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:title="Añadir Tarjeta"
-            app:titleTextColor="?attr/colorOnPrimary" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Añadir Tarjeta"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:navigationIcon="@drawable/ic_arrow_back"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,13 +25,17 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Número de Tarjeta">
+            android:hint="Número de Tarjeta"
+            app:counterEnabled="true"
+            app:counterMaxLength="19"
+            app:endIconMode="custom"> 
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/card_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:maxLength="19"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,18 +45,20 @@
             android:orientation="horizontal"
             android:layout_marginTop="8dp">
 
+            <!-- Mes y Año juntos visualmente pero separados por funcionalidad -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:hint="Mes (MM)">
+                android:hint="MM/AA">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/expiry_month"
+                    android:id="@+id/expiry_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:maxLength="5"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -65,37 +66,50 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Año (AA)">
+                android:hint="CVV"
+                app:passwordToggleEnabled="false"> 
 
+                <!-- CVV encriptado (password) -->
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/expiry_year"
+                    android:id="@+id/cvv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"/>
+                    android:inputType="numberPassword"
+                    android:maxLength="3"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <!-- Selección de tipo de tarjeta con RadioButtons estándar -->
+        <RadioGroup
+            android:id="@+id/radio_group_card_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="CVV">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cvv"
-                android:layout_width="match_parent"
+            <RadioButton
+                android:id="@+id/rb_visa"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberPassword"/>
+                android:text="Visa"
+                android:layout_marginEnd="32dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <RadioButton
+                android:id="@+id/rb_mastercard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mastercard"/>
+
+        </RadioGroup>
 
         <Button
             android:id="@+id/btn_add_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="Añadir Tarjeta"/>
 
     </LinearLayout>

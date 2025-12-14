@@ -144,11 +144,11 @@ public class CheckoutActivity extends AppCompatActivity {
                     Toast.makeText(CheckoutActivity.this, "Compra realizada con éxito", Toast.LENGTH_LONG).show();
                     CartManager.getInstance().clearCart();
                     
-                    // CORRECCIÓN: Usar los flags correctos para limpiar la pila
                     Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    // IMPORTANTE: Estos flags limpian la pila de actividades para que al volver atrás no se pueda volver a la pantalla de pago
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    finish(); // Cierra esta actividad y todas las anteriores
+                    finish(); // Cerrar CheckoutActivity
                 } else {
                     Toast.makeText(CheckoutActivity.this, "Error al procesar la compra", Toast.LENGTH_SHORT).show();
                 }

@@ -58,12 +58,14 @@
                 android:textSize="12sp"
                 tools:text="16:52" />
 
+            <!-- Añadido tools:visibility="visible" y app:tint="@null" para que se vea en el preview y use color original -->
             <ImageView
                 android:id="@+id/image_message_status"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="4dp"
-                app:tint="#B3FFFFFF" 
+                android:visibility="visible"
+                app:tint="@null"
                 tools:src="@drawable/ic_done_all_blue" />
 
         </LinearLayout>

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+    
+    <!-- Se elimina el fondo o se hace transparente para quitar la "barra" fea -->
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/date_separator_background"
+        android:text="13.12.2025"
+        android:textSize="12sp"
+        android:textColor="#909090"
+        android:background="@drawable/date_header_background" 
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="12sp" />
-
-</FrameLayout>
+        android:paddingBottom="4dp"/>
+</LinearLayout>

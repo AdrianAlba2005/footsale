@@ -4,9 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class BanUserRequest {
     @SerializedName("id_usuario")
-    private final int userId;
+    private int idUsuario;
 
-    public BanUserRequest(int userId) {
-        this.userId = userId;
+    public BanUserRequest(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
     }
 }

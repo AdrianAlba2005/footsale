@@ -169,13 +169,8 @@ public class ChatActivity extends AppCompatActivity {
         
         if (toolbarImage != null) {
             if (imageUrl != null && !imageUrl.isEmpty()) {
-                // Asegurarse de que la URL sea absoluta si es relativa
-                if (!imageUrl.startsWith("http")) {
-                    imageUrl = "http://10.0.2.2/footsale/" + imageUrl;
-                }
-                
                 Glide.with(this)
-                    .load(imageUrl)
+                    .load(ApiClient.getFullImageUrl(imageUrl))
                     .placeholder(R.drawable.ic_person)
                     .error(R.drawable.ic_person)
                     .into(toolbarImage);

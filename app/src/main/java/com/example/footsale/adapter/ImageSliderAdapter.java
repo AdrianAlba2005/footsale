@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.footsale.R;
+import com.example.footsale.api.ApiClient;
 import java.util.List;
 
 public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.ViewHolder> {
@@ -32,7 +33,7 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String imageUrl = imageUrls.get(position);
         Glide.with(holder.itemView.getContext())
-                .load(imageUrl)
+                .load(ApiClient.getFullImageUrl(imageUrl))
                 .placeholder(R.drawable.ic_image_placeholder)
                 .into(holder.imageView);
     }

@@ -9,7 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://10.0.2.2/footsale/";
+    public static final String BASE_URL = "http://10.0.2.2/footsale/";
     private static Retrofit retrofit = null;
 
     private static Retrofit getClient(Context context) {
@@ -54,12 +54,30 @@ public class ApiClient {
         return getClient(context).create(MessageApiService.class);
     }
 
-    // --- MÉTODO AÑADIDO ---
     public static FirebaseApiService createFirebaseApiService(Context context) {
         return getClient(context).create(FirebaseApiService.class);
     }
 
     public static void resetClient() {
         retrofit = null;
+    }
+
+    public static String getFullImageUrl(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) return null;
+
+        // Si la URL viene con localhost (común en entornos de desarrollo), cambiar a 10.0.2.2 para el emulador
+        if (imagePath.contains("localhost")) {
+            imagePath = imagePath.replace("localhost", "10.0.2.2");
+        }
+
+        if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+            return imagePath;
+        }
+        
+        // Evitar doble barra si la ruta ya empieza por /
+        if (imagePath.startsWith("/")) {
+            return BASE_URL.substring(0, BASE_URL.length() - 1) + imagePath;
+        }
+        return BASE_URL + imagePath;
     }
 }

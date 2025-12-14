@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.footsale.ChatActivity;
 import com.example.footsale.R;
+import com.example.footsale.api.ApiClient;
 import com.example.footsale.entidades.Conversation;
 
 import java.text.ParseException;
@@ -53,46 +54,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         
         holder.userName.setText(conversation.getNombre());
         
-        // --- MODIFICADO: Añadir prefijo "Tú: " ---
-        // Asumiendo que Conversation tiene un método para saber quién envió el último mensaje.
-        // Si no lo tiene, habría que modificar el backend o la clase Conversation.
-        // Como no puedo modificar el backend, haré una suposición basada en el diseño típico.
-        // Si Conversation no trae 'last_sender_id', no podemos saberlo con certeza solo con los datos actuales.
-        // Pero intentaremos formatear el mensaje.
-        
         String messagePreview = conversation.getLastMessage();
-        
-        // Intentamos ver si hay indicación de remitente.
-        // NOTA: Si la API no devuelve quién envió el último mensaje, 
-        // no podemos saber si fui 'yo' sin modificar el PHP 'mensaje.php' action=get_conversations
-        // Pero el usuario pidió: "si he sido yo pues que ponga TU: delante"
-        
-        // Solución Frontend Parcial:
-        // Si no podemos saberlo, mostramos el mensaje tal cual. 
-        // Si pudieras modificar Conversation.java para incluir 'last_message_sender_id', sería ideal.
-        // Asumiré que el usuario quiere esto, así que modificaré Conversation.java si es necesario
-        // pero primero verifiquemos si podemos deducirlo.
-        
-        // Voy a añadir la lógica asumiendo que Conversation.java tiene un campo o que
-        // podemos inferirlo. Si no, lo dejaré preparado.
-        
-        // TRUCO: A veces el backend ya formatea esto, pero si no,
-        // necesitamos que el backend nos diga el 'id_remitente' del último mensaje.
-        // Revisando 'mensaje.php' anterior (que vi en el historial), la consulta SQL era:
-        /*
-           SELECT 
-            u.id_usuario, 
-            u.nombre, 
-            m.mensaje as last_message,
-            m.timestamp as last_message_time,
-            m.id_remitente as last_message_sender_id,  <-- ESTO ES LO QUE NECESITAMOS, PERO NO ESTABA EN EL PHP ORIGINAL
-           ...
-        */
-        
-        // Como no puedo tocar el PHP y parece que no devuelve el ID del remitente del último mensaje,
-        // no puedo implementar "TU:" con 100% de certeza sin cambios en el backend.
-        // SIN EMBARGO, si el usuario dice "si salgo del chat quiero que aparezca", 
-        // implica que la lista se refresca.
         
         holder.lastMessage.setText(messagePreview);
         
@@ -111,7 +73,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
 
         if (conversation.getFotoPerfil() != null && !conversation.getFotoPerfil().isEmpty()) {
-            Glide.with(context).load(conversation.getFotoPerfil()).into(holder.userImage);
+            Glide.with(context)
+                    .load(ApiClient.getFullImageUrl(conversation.getFotoPerfil()))
+                    .placeholder(R.drawable.ic_person)
+                    .into(holder.userImage);
         } else {
             holder.userImage.setImageResource(R.drawable.ic_person);
         }

@@ -1,6 +1,7 @@
 package com.example.footsale.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +40,23 @@ public class MyCardsAdapter extends RecyclerView.Adapter<MyCardsAdapter.CardView
         String last4 = card.getUltimosCuatro() != null ? card.getUltimosCuatro() : "0000";
         holder.cardNumber.setText("**** **** **** " + last4);
 
+        // --- LÓGICA DE SALDO ---
+        double saldo = card.getLimite(); // Asumiendo que 'limite' se usa como saldo disponible
+        holder.cardBalance.setText(String.format("%.2f €", saldo));
+        
+        if (saldo > 0) {
+            holder.cardBalance.setTextColor(Color.parseColor("#4CAF50")); // Verde
+        } else {
+            holder.cardBalance.setTextColor(Color.RED); // Rojo
+        }
+
         // --- LÓGICA PARA ASIGNAR EL ICONO ---
         if (cardType.toLowerCase().contains("visa")) {
             holder.cardIcon.setImageResource(R.drawable.visa);
-        } else if (cardType.toLowerCase().contains("mastercard")) { // Usar "mastercard" si así viene del backend
+        } else if (cardType.toLowerCase().contains("mastercard")) { 
             holder.cardIcon.setImageResource(R.drawable.mastercard);
         } else {
-            holder.cardIcon.setImageResource(R.drawable.ic_card); // Icono por defecto
+            holder.cardIcon.setImageResource(R.drawable.ic_card); 
         }
     }
 
@@ -56,13 +67,14 @@ public class MyCardsAdapter extends RecyclerView.Adapter<MyCardsAdapter.CardView
 
     static class CardViewHolder extends RecyclerView.ViewHolder {
         ImageView cardIcon;
-        TextView cardType, cardNumber;
+        TextView cardType, cardNumber, cardBalance; // Añadido cardBalance
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
             cardIcon = itemView.findViewById(R.id.cardIcon);
             cardType = itemView.findViewById(R.id.cardType);
             cardNumber = itemView.findViewById(R.id.cardNumber);
+            cardBalance = itemView.findViewById(R.id.cardBalance); // Vinculación
         }
     }
 }
