@@ -1,10 +1,13 @@
 package com.example.footsale;
 
 import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +41,7 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
 
     public static final String EXTRA_EDIT_PRODUCT_ID = "edit_product_id";
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String TAG = "PublishProductActivity";
 
     private EditText titleEditText, descriptionEditText, priceEditText, quantityEditText;
     private Spinner categorySpinner;
@@ -128,11 +132,21 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
                     priceEditText.setText(String.valueOf(producto.getPrecio()));
                     quantityEditText.setText(String.valueOf(producto.getCantidad()));
 
-                    for (int i = 0; i < categoriaList.size(); i++) {
-                        if (categoriaList.get(i).getId_categoria() == producto.getCategoria().getId_categoria()) {
-                            categorySpinner.setSelection(i);
-                            break;
+                    if (producto.getCategoria() != null) {
+                        for (int i = 0; i < categoriaList.size(); i++) {
+                            if (categoriaList.get(i).getId_categoria() == producto.getCategoria().getId_categoria()) {
+                                categorySpinner.setSelection(i);
+                                break;
+                            }
                         }
+                    }
+
+                    if (producto.getImagenes() != null && !producto.getImagenes().isEmpty()) {
+                        imageUris.clear();
+                        for (String imageUrl : producto.getImagenes()) {
+                            imageUris.add(Uri.parse(ApiClient.getFullImageUrl(imageUrl)));
+                        }
+                        imagePreviewAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -152,14 +166,13 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            imageUris.clear();
             if (data.getClipData() != null) {
                 ClipData clipData = data.getClipData();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
-                    if(i < 9) imageUris.add(clipData.getItemAt(i).getUri());
+                    if (imageUris.size() < 9) imageUris.add(clipData.getItemAt(i).getUri());
                 }
             } else if (data.getData() != null) {
-                imageUris.add(data.getData());
+                if (imageUris.size() < 9) imageUris.add(data.getData());
             }
             imagePreviewAdapter.notifyDataSetChanged();
         }
@@ -170,30 +183,90 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
         String description = descriptionEditText.getText().toString().trim();
         String price = priceEditText.getText().toString().trim();
         String quantity = quantityEditText.getText().toString().trim();
+        
+        if (categoriaList.isEmpty()) return;
         Categoria selectedCategory = categoriaList.get(categorySpinner.getSelectedItemPosition());
+        int catId = selectedCategory.getId_categoria();
 
-        if (productIdToEdit != -1) {
-            updateProductMultipart(productIdToEdit, title, description, price, quantity, selectedCategory.getId_categoria());
-        } else {
-            createProductMultipart(title, description, price, quantity, selectedCategory.getId_categoria());
+        // Mostrar indicador de carga y deshabilitar botón para evitar dobles clics
+        publishButton.setEnabled(false);
+        Toast.makeText(this, "Procesando imágenes, por favor espere...", Toast.LENGTH_SHORT).show();
+
+        // Ejecutar la preparación de imágenes (descarga y copiado) en segundo plano
+        new Thread(() -> {
+            List<MultipartBody.Part> imageParts = prepareImageParts();
+            
+            // Volver al hilo principal para realizar la petición de red con Retrofit
+            runOnUiThread(() -> {
+                publishButton.setEnabled(true);
+                if (productIdToEdit != -1) {
+                    updateProductMultipart(productIdToEdit, title, description, price, quantity, catId, imageParts);
+                } else {
+                    createProductMultipart(title, description, price, quantity, catId, imageParts);
+                }
+            });
+        }).start();
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String type = cR.getType(uri);
+        return mime.getExtensionFromMimeType(type);
+    }
+
+    private File downloadFileFromUrl(String urlString) {
+        try {
+            java.net.URL url = new java.net.URL(urlString);
+            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            File file = new File(getCacheDir(), "reupload_" + System.currentTimeMillis() + ".jpg");
+            FileOutputStream output = new FileOutputStream(file);
+            byte[] buffer = new byte[4096];
+            int len;
+            while ((len = input.read(buffer)) > 0) {
+                output.write(buffer, 0, len);
+            }
+            output.close();
+            input.close();
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     private List<MultipartBody.Part> prepareImageParts() {
         List<MultipartBody.Part> imageParts = new ArrayList<>();
         for (Uri uri : imageUris) {
+            File file = null;
             try {
-                File file = new File(getCacheDir(), "temp_image_" + System.currentTimeMillis());
-                InputStream inputStream = getContentResolver().openInputStream(uri);
-                OutputStream outputStream = new FileOutputStream(file);
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = inputStream.read(buf)) > 0) outputStream.write(buf, 0, len);
-                outputStream.close();
-                inputStream.close();
+                if (uri.toString().startsWith("http")) {
+                    // Si es una URL remota, la descargamos para re-subirla
+                    file = downloadFileFromUrl(uri.toString());
+                } else {
+                    // Si es local, la copiamos al cache
+                    String extension = getFileExtension(uri);
+                    if (extension == null) extension = "jpg";
 
-                RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(uri)), file);
-                imageParts.add(MultipartBody.Part.createFormData("imagenes[]", file.getName(), requestFile));
+                    file = new File(getCacheDir(), "temp_image_" + System.currentTimeMillis() + "." + extension);
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    FileOutputStream outputStream = new FileOutputStream(file);
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = inputStream.read(buf)) > 0) outputStream.write(buf, 0, len);
+                    outputStream.close();
+                    inputStream.close();
+                }
+
+                if (file != null && file.exists()) {
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+                    // IMPORTANTE: El nombre del archivo debe tener extensión
+                    imageParts.add(MultipartBody.Part.createFormData("imagenes[]", file.getName(), requestFile));
+                    Log.d(TAG, "Imagen preparada: " + file.getName());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -201,8 +274,7 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
         return imageParts;
     }
 
-    private void createProductMultipart(String title, String desc, String price, String quant, int catId) {
-        List<MultipartBody.Part> imageParts = prepareImageParts();
+    private void createProductMultipart(String title, String desc, String price, String quant, int catId, List<MultipartBody.Part> imageParts) {
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
         RequestBody descBody = RequestBody.create(MediaType.parse("text/plain"), desc);
         RequestBody priceBody = RequestBody.create(MediaType.parse("text/plain"), price);
@@ -214,6 +286,9 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(PublishProductActivity.this, "Producto publicado con éxito", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(PublishProductActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     finish();
                 } else {
                     Toast.makeText(PublishProductActivity.this, "Error al publicar el producto", Toast.LENGTH_SHORT).show();
@@ -226,8 +301,7 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
         });
     }
 
-    private void updateProductMultipart(int productId, String title, String desc, String price, String quant, int catId) {
-        List<MultipartBody.Part> imageParts = prepareImageParts();
+    private void updateProductMultipart(int productId, String title, String desc, String price, String quant, int catId, List<MultipartBody.Part> imageParts) {
         RequestBody idBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(productId));
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
         RequestBody descBody = RequestBody.create(MediaType.parse("text/plain"), desc);
@@ -240,6 +314,10 @@ public class PublishProductActivity extends AppCompatActivity implements ImagePr
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(PublishProductActivity.this, "Producto actualizado con éxito", Toast.LENGTH_SHORT).show();
+                    // Redirigir a MainActivity con la pila limpia para actualizar el perfil/dashboard
+                    Intent intent = new Intent(PublishProductActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     finish();
                 } else {
                     Toast.makeText(PublishProductActivity.this, "Error al actualizar el producto", Toast.LENGTH_SHORT).show();

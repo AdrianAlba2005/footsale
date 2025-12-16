@@ -9,6 +9,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.footsale.R;
 import com.example.footsale.api.ApiClient;
 import com.example.footsale.api.models.DeleteReviewRequest;
@@ -41,7 +42,18 @@ public class ResenaAdapter extends RecyclerView.Adapter<ResenaAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Resena resena = resenaList.get(position);
+        
+        // Asignar el nombre del autor
         holder.authorName.setText(resena.getNombreAutor());
+        
+        // Cargar la foto del autor usando Glide
+        Glide.with(context)
+             .load(ApiClient.getFullImageUrl(resena.getFotoAutor()))
+             .placeholder(R.drawable.ic_person) // Avatar por defecto si no hay foto o falla la carga
+             .error(R.drawable.ic_person)
+             .circleCrop() // Recortar la imagen en círculo
+             .into(holder.avatar);
+
         holder.comment.setText(resena.getComentario());
         holder.ratingBar.setRating(resena.getPuntuacion());
 
@@ -81,7 +93,7 @@ public class ResenaAdapter extends RecyclerView.Adapter<ResenaAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView authorName, comment;
         RatingBar ratingBar;
-        ImageView deleteButton;
+        ImageView deleteButton, avatar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,6 +101,7 @@ public class ResenaAdapter extends RecyclerView.Adapter<ResenaAdapter.ViewHolder
             comment = itemView.findViewById(R.id.tvComment);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             deleteButton = itemView.findViewById(R.id.ivDeleteReview);
+            avatar = itemView.findViewById(R.id.ivAvatar);
         }
     }
 }

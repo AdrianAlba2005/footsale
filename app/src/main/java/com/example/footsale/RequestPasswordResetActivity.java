@@ -32,8 +32,10 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
                         Intent intent = new Intent(RequestPasswordResetActivity.this, ResetPasswordActivity.class);
-                        intent.putExtra("email", email);
+                        // Asegurar que la clave coincide exactamente con lo que espera la siguiente actividad
+                        intent.putExtra("EMAIL", email);
                         startActivity(intent);
+                        finish(); // Cerrar esta pantalla para que el usuario no vuelva aquí al pulsar atrás
                     } else {
                         Toast.makeText(RequestPasswordResetActivity.this, "Error al solicitar el código", Toast.LENGTH_SHORT).show();
                     }

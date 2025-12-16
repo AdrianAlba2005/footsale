@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.footsale.AuthActivity;
+import com.example.footsale.EditProfileActivity; // Importar EditProfileActivity
 import com.example.footsale.R;
 import com.example.footsale.AllSalesActivity;
 import com.example.footsale.adapter.UserAdapter;
@@ -41,6 +42,7 @@ public class StoreAdminFragment extends Fragment {
     private TextView statTotalMoney;
     private MaterialCardView cardTotalOrders;
     private ImageButton btnLogoutStore;
+    private ImageButton btnEditProfile; // Nuevo botón
 
     @Nullable
     @Override
@@ -53,6 +55,7 @@ public class StoreAdminFragment extends Fragment {
         statTotalOrders = view.findViewById(R.id.statTotalOrders);
         statTotalMoney = view.findViewById(R.id.statTotalMoney);
         btnLogoutStore = view.findViewById(R.id.btnLogoutStore);
+        btnEditProfile = view.findViewById(R.id.btnEditProfile); // Referenciar el botón de editar perfil
 
         // Lógica de cerrar sesión
         btnLogoutStore.setOnClickListener(v -> {
@@ -63,6 +66,12 @@ public class StoreAdminFragment extends Fragment {
             // Redirigir a pantalla de login
             Intent intent = new Intent(getContext(), AuthActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+
+        // Lógica para ir a editar perfil
+        btnEditProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditProfileActivity.class);
             startActivity(intent);
         });
 

@@ -23,6 +23,8 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -41,7 +43,6 @@ public interface UsuarioApiService {
     @GET("usuario.php?action=get_profile")
     Call<Usuario> getProfileInfo();
 
-    // Changed from "get_profile" to "get_public_profile" to match backend logic for fetching OTHER users
     @GET("usuario.php?action=get_public_profile")
     Call<Usuario> getUserProfile(@Query("user_id") int userId);
 
@@ -49,13 +50,20 @@ public interface UsuarioApiService {
     @POST("usuario.php?action=update_profile")
     Call<Void> updateProfile(@PartMap Map<String, RequestBody> fields, @Part MultipartBody.Part image);
 
+    // Cambiado a @FormUrlEncoded para que PHP reciba los datos en $_POST
+    @FormUrlEncoded
     @POST("usuario.php?action=update_profile")
-    Call<Void> updateProfileTextOnly(@Body UpdateProfileRequest request);
+    Call<Void> updateProfileTextOnly(
+            @Field("nombre") String nombre,
+            @Field("nacionalidad") String nacionalidad,
+            @Field("telefono") String telefono,
+            @Field("calle") String calle,
+            @Field("ciudad") String ciudad
+    );
 
     @POST("usuario.php?action=request_password_reset")
     Call<Void> requestPasswordReset(@Body EmailRequest request);
 
-    // --- CORREGIDO: verify_code -> verify_email para coincidir con el backend ---
     @POST("usuario.php?action=verify_email")
     Call<Void> verifyCode(@Body VerifyCodeRequest request);
 

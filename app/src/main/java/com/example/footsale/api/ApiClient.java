@@ -19,6 +19,28 @@ public class ApiClient {
 
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
             httpClient.addInterceptor(logging);
+
+            // --- CORRECCIÓN: Interceptor para limpiar respuestas malformadas de PHP (?>) ---
+            httpClient.addInterceptor(chain -> {
+                okhttp3.Response response = chain.proceed(chain.request());
+                if (response.body() != null) {
+                    okhttp3.MediaType contentType = response.body().contentType();
+                    // Solo intentamos limpiar si es una respuesta JSON
+                    if (contentType != null && contentType.toString().contains("json")) {
+                        String content = response.body().string();
+                        // Si empieza con ?>, lo quitamos
+                        if (content.trim().startsWith("?>")) {
+                            content = content.trim().substring(2).trim();
+                        }
+                        // Reconstruimos la respuesta limpia
+                        okhttp3.ResponseBody body = okhttp3.ResponseBody.create(contentType, content);
+                        return response.newBuilder().body(body).build();
+                    }
+                }
+                return response;
+            });
+            // -------------------------------------------------------------------------------
+
             httpClient.addInterceptor(chain -> {
                 Request original = chain.request();
                 Request.Builder requestBuilder = original.newBuilder();

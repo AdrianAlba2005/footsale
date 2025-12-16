@@ -99,7 +99,20 @@ public class TiendaFragment extends Fragment {
 
     private void setupCategoryRecyclerView() {
         categoriaAdapter = new CategoriaAdapter(getContext(), categoryList, categoryId -> {
-            currentCategoryId = categoryId;
+            // Si se pulsa la misma categoría o una categoría especial para "Todos" (ej: 0), reseteamos.
+            // Aquí asumimos que si categoryId es 0 o igual al actual (y el actual no es 0) quizás queramos deseleccionar.
+            // Pero según la lógica habitual:
+            // Si categoryId > 0, filtramos por esa categoría.
+            // Si categoryId == 0, mostramos todos.
+            
+            if (currentCategoryId == categoryId && categoryId != 0) {
+                // Si el usuario toca la misma categoría activa, podríamos deseleccionarla (volver a todos)
+                currentCategoryId = 0;
+                categoriaAdapter.clearSelection(); 
+            } else {
+                currentCategoryId = categoryId;
+            }
+            
             currentQuery = null;
             searchView.setQuery("", false);
             resetAndLoadFirstPage();
@@ -163,6 +176,8 @@ public class TiendaFragment extends Fragment {
             public void onResponse(@NonNull Call<List<Categoria>> call, @NonNull Response<List<Categoria>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     categoryList.clear();
+                    // Opcional: Añadir una categoría "Todos" al principio si no viene del servidor
+                    // categoryList.add(new Categoria(0, "Todos")); 
                     categoryList.addAll(response.body());
                     categoriaAdapter.notifyDataSetChanged();
                 }
@@ -188,6 +203,7 @@ public class TiendaFragment extends Fragment {
         if (currentQuery != null && !currentQuery.trim().isEmpty()) {
             call = apiService.searchProducts(currentQuery, userId, page);
         } else if (currentCategoryId > 0) {
+            // CORREGIDO: Asegurar que se llama al endpoint correcto pasando currentCategoryId
             call = apiService.getProductsByCategory(currentCategoryId, userId, page);
         } else {
             call = apiService.getAllProducts(userId, page);
